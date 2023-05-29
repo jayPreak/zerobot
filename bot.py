@@ -19,4 +19,4 @@ auth = tweepy.OAuth1UserHandler(
 
 api = tweepy.API(auth)
 client.create_tweet(
-    text="WAITING FOR L9 MAFIA TO DELIVER PIZZA ITS BEEN SO LONG IM HUNGRY GUYS PLEASE test")
+    text="₵₳₮₵Ⱨł₦₲ ₮ⱧɆ₴Ɇ ₳ӾɆ₴ ₴Ø ł ĐØ₦₮ ₵₳₮₵Ⱨ ₣ɆɆⱠł₦₲₴ ₣ØⱤ ⱧɆⱤ ")
