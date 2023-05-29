@@ -17,14 +17,6 @@ client = tweepy.Client(bearerToken, apiKey, apiKeySecret,
 auth = tweepy.OAuth1UserHandler(
     apiKey, apiKeySecret, accessToken, accessTokenSecret)
 
-api = tweepy.API(auth, wait_on_rate_limit=True)
-
-try:
-    api.verify_credentials()
-    print("Authentication OK")
-
-except:
-    print("Error during authentication")
-
-api.update_status(
-    "L9 FAKER HAS MY IP ADRESS PLEASE DONT @ HIM IN GENERAL ON RATIRL SERVER I BEG U")
+api = tweepy.API(auth)
+client.create_tweet(
+    text="WAITING FOR L9 MAFIA TO DELIVER PIZZA ITS BEEN SO LONG IM HUNGRY GUYS PLEASE test")
