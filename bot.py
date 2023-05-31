@@ -2,6 +2,7 @@ import tweepy
 import sqlite3 as db
 import os
 from dotenv import load_dotenv
+import requests
 
 load_dotenv()
 
@@ -26,6 +27,19 @@ cursor = connection.cursor()
 
 
 show_name = "Darling In the Franxx"
+github_user = "jaypreak"  # Replace with your GitHub username
+repo_name = "zerobot"  # Replace with the name of your GitHub repository
+
+
+def fetch_image_from_github(frame_path):
+    url = f'https://raw.githubusercontent.com/{github_user}/{repo_name}/main/{frame_path}'
+    response = requests.get(url, stream=True)
+    response.raise_for_status()
+
+    with open('path_to_local_image.jpg', 'wb') as file:
+        for chunk in response.iter_content(chunk_size=8192):
+            file.write(chunk)
+    return 'path_to_local_image.jpg'
 
 
 iters = 1
@@ -38,7 +52,7 @@ while iters > 0:
     ep_season, ep_num = current_ep.split('x')
 
     total_frames = cursor.execute(
-        f"SELECT frames FROM show WHERE ep = \"{current_ep}\"").fetchone()[0]
+        "SELECT frames FROM show WHERE ep = ?", (current_ep,)).fetchone()[0]
 
     next_frame = cursor.execute("SELECT last_frame FROM bot").fetchone()[0] + 1
 
@@ -62,9 +76,10 @@ while iters > 0:
             continue
 
     frame_path = f"./frames/S{ep_season}/{ep_num}x{next_frame}.jpg"
+    local_path = fetch_image_from_github(frame_path)
 
     msg = f"{show_name} - Season {ep_season} Episode {ep_num} - Frame {next_frame} of {total_frames}"
-    media = api.media_upload(frame_path)
+    media = api.media_upload(local_path)
 
     client.create_tweet(text=msg, media_ids=[media.media_id])
 
