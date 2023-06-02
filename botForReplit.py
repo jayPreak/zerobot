@@ -5,13 +5,15 @@ import sqlite3 as db
 from dotenv import load_dotenv
 from keep_alive import keep_alive
 import requests
+import logging
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+logging.basicConfig(filename='bot.log', level=logging.INFO)
 
 keep_alive()
 
 load_dotenv()
-
-with open('num.txt', 'r') as f:
-    num = int(f.read())
 
 apiKey = os.getenv("APIKEY")
 apiKeySecret = os.getenv("APIKEY_SECRET")
@@ -48,23 +50,31 @@ def fetch_image_from_github(frame_path):
 
 
 while True:
-    iters = 1
+
+    iters = 5
 
     while iters > 0:
-
+        dtobj = datetime.now(tz=ZoneInfo('Asia/Kolkata'))
+        logging.info(f"The date and time is = {dtobj}")
         current_ep = cursor.execute(
             "SELECT current_episode FROM bot").fetchone()[0]
+        logging.info(f"Current_ep is {current_ep}")
 
         ep_season, ep_num = current_ep.split('x')
+        logging.info(f"ep_season is {ep_season}")
+        logging.info(f"ep_num is {ep_num}")
 
         total_frames = cursor.execute("SELECT frames FROM show WHERE ep = ?",
                                       (current_ep, )).fetchone()[0]
+        logging.info(f"total frames is {total_frames}")
 
         next_frame = cursor.execute(
             "SELECT last_frame FROM bot").fetchone()[0] + 1
+        logging.info(f"next frame is {next_frame}")
 
         if next_frame > total_frames:
             next_ep = str(int(ep_num) + 1).zfill(2)
+            logging.info("dont think this even executes but lets see")
 
             if os.path.isfile(f"./frames/S{ep_season}/{next_ep}x1.jpg"):
                 cursor.execute(
@@ -89,12 +99,13 @@ while True:
         media = api.media_upload(local_path)
 
         tweet = client.create_tweet(text=msg, media_ids=[media.media_id])
+        logging.info(f'Posting frame {next_frame} of episode {current_ep}')
 
-        # Verify that the tweet was successfully posted
-        if tweet:
-            cursor.execute("UPDATE bot SET last_frame = ?", (next_frame, ))
-            connection.commit()
+        cursor.execute("UPDATE bot SET last_frame = ?", (next_frame, ))
+        logging.info(f"next frame in the if statement is {next_frame}")
+
+        connection.commit()
 
         iters -= 1
 
-    time.sleep(3600)
+    time.sleep(1800)
