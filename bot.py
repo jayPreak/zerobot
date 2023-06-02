@@ -51,7 +51,7 @@ def fetch_image_from_github(frame_path):
 
 while True:
 
-    iters = 3
+    iters = 5
 
     while iters > 0:
         dtobj = datetime.now(tz=ZoneInfo('Asia/Kolkata'))
