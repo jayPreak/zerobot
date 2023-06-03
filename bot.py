@@ -33,7 +33,7 @@ cursor = connection.cursor()
 show_name = "Darling In the Franxx"
 
 
-iters = 5
+iters = 1
 
 while iters > 0:
     dtobj = datetime.now(tz=ZoneInfo('Asia/Kolkata'))
