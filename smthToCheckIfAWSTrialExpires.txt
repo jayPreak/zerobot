@@ -1,1 +1,2 @@
 https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
+https://vercel.com/templates/next.js/vercel-cron
