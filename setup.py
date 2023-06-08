@@ -2,13 +2,14 @@ import os
 import re
 import glob
 import sqlite3 as db
-eps = glob.glob('*.mkv')
+eps = glob.glob('*.mp4')
 fps = 1
 os.mkdir('frames')
 
 regex = re.compile(
     r"(?:.*)(?:s|season|)\s?(\d{1,2})\s?(?:e|x|episode|ep|\n)\s?(\d{1,2})", re.IGNORECASE)
-
+# print(regex)
+# print(eps)
 for ep in eps:
     print("ah")
     ep_regex = regex.match(ep)
